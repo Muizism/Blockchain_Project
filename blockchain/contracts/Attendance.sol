@@ -1,27 +1,26 @@
-// contracts/Attendance.sol
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 contract Attendance {
     struct AttendanceRecord {
         mapping(address => bool) isPresent;
-        string date;
     }
 
-    mapping(string => AttendanceRecord) attendanceRecords;
+    mapping(string => AttendanceRecord) private attendanceRecords;
 
-    function markAttendance(string memory date) public {
+    // Events
+    event AttendanceMarked(string date, address attendee);
+
+    // Mark attendance for a given date
+    function markAttendance(string calldata date) external {
         require(!attendanceRecords[date].isPresent[msg.sender], "Attendance already marked.");
 
         attendanceRecords[date].isPresent[msg.sender] = true;
-        attendanceRecords[date].date = date;
+        emit AttendanceMarked(date, msg.sender);
     }
 
-    function getAttendance(string memory date) public view returns (bool) {
-        return attendanceRecords[date].isPresent[msg.sender];
-    }
-
-    function getAttendanceDate(string memory date) public view returns (string memory) {
-        return attendanceRecords[date].date;
+    // Check if a specific address marked attendance on a given date
+    function checkAttendance(string calldata date, address attendee) external view returns (bool) {
+        return attendanceRecords[date].isPresent[attendee];
     }
 }

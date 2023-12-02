@@ -1,5 +1,6 @@
-const HostelAttendance = artifacts.require("HostelAttendance");
+const HostelAttendance = artifacts.require("Attendance");
 
-module.exports = function (deployer) {
-  deployer.deploy(HostelAttendance);
+module.exports = async (deployer) =>{
+  let instance= await deployer.deploy(HostelAttendance);
+  console.log(instance)
 };
